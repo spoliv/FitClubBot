@@ -11,9 +11,14 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from configparser import ConfigParser
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+local_config_path = os.path.join(BASE_DIR, 'conf', 'local.conf')
+config = ConfigParser()
+config.read(local_config_path)
 
 
 # Quick-start development settings - unsuitable for production
@@ -22,8 +27,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '(kje8paji$%-uvn%)zews3!1cadg*!0u1+ql4^gaqvfi9iomkx'
 
+#SECRET_KEY = config.get('main', 'SECRET')
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
+DEBUG = config.getboolean('main', 'DEBUG')
+
+TOKEN = config.get('main', 'TOKEN')
 
 ALLOWED_HOSTS = ['127.0.0.1']
 
@@ -50,6 +60,7 @@ INSTALLED_APPS = [
 
     'api',
     'users',
+    'services',
 ]
 
 REST_FRAMEWORK = {
