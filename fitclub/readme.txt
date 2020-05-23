@@ -1,4 +1,4 @@
-http://127.0.0.1:8000/api/v1/users/1168528589:AAFieV61wqq_aDgmeeCNykGIFVt3d1KvGxk/
+http://127.0.0.1:8000/api/v1/users/<token>/
 
 
 {
@@ -23,7 +23,7 @@ http://127.0.0.1:8000/api/v1/users/1168528589:AAFieV61wqq_aDgmeeCNykGIFVt3d1KvGx
 				}
 }
 
-https://api.telegram.org/bot1168528589:AAFieV61wqq_aDgmeeCNykGIFVt3d1KvGxk/getMe
+https://api.telegram.org/bot1<token>/getMe
 
 в ответ получаем
 {"ok":true,"result":{"id":1168528589,"is_bot":true,"first_name":"FitClubBot",
@@ -31,7 +31,7 @@ https://api.telegram.org/bot1168528589:AAFieV61wqq_aDgmeeCNykGIFVt3d1KvGxk/getMe
                      "supports_inline_queries":false}}
 
 
-https://api.telegram.org/bot1168528589:AAFieV61wqq_aDgmeeCNykGIFVt3d1KvGxk/getUpdates
+https://api.telegram.org/bot<token>/getUpdates
 
 в ответ получакм
 
