@@ -17,6 +17,15 @@ class ServiceListView(generics.ListAPIView):
     serializer_class = serializers.ServiceSerializer
 
 
+class ServiceView(generics.ListAPIView):
+    def get_queryset(self):
+        queryset = super(ServiceView, self).get_queryset()
+        queryset = queryset.filter(id=self.kwargs['pk'])
+        return queryset
+    queryset = models.Service.objects.all()
+    serializer_class = serializers.ServiceSerializer
+
+
 class ServiceCreateView(generics.ListCreateAPIView):
     serializer_class = serializers.ServiceSerializer
 
