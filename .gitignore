@@ -9,3 +9,4 @@ test*.py
 .env
 *.sqlite3
 conf/
+.pdf

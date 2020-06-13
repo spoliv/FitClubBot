@@ -239,7 +239,8 @@ def basket_command(message):
 
 @bot.message_handler(commands=["create_card"])
 def card_create_command(message):
-    utils.create_card(1, 336)
+    utils.create_card(1)
+    #utils.create_card(1, 336)
     bot.send_message(
         message.chat.id, 'Ok, Вы сформировали карту клиента')
 

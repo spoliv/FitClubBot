@@ -15,6 +15,10 @@ from configparser import ConfigParser
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+#SCHEDULES_FOLDER = 'schedules'
+
+
+#schedules_path = os.path.join(BASE_DIR, SCHEDULES_FOLDER)
 
 local_config_path = os.path.join(BASE_DIR, 'conf', 'local.conf')
 config = ConfigParser()
@@ -74,6 +78,19 @@ REST_FRAMEWORK = {
 }
 
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = "hello@hello.ru"
+# EMAIL_HOST_PASSWORD = "password"
+# EMAIL_USE_TLS = True
+
+EMAIL_HOST = config.get('smtp', 'EMAIL_HOST')
+EMAIL_PORT = config.get('smtp', 'EMAIL_PORT')
+EMAIL_HOST_USER = config.get('smtp', 'EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config.get('smtp', 'EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = config.getboolean('smtp', 'EMAIL_USE_TLS')
 
 SITE_ID = 1
 

@@ -1,5 +1,6 @@
 import requests
 import json
+import random
 
 
 
@@ -71,7 +72,8 @@ def get_basket_for_card(usr_id):
     return json.loads(requests.get(url_bskt).text)
 
 
-def create_card(usr_id, card_number):
+#def create_card(usr_id, card_number):
+def create_card(usr_id):
     url_card = 'http://127.0.0.1:8000/api/v1/orders/create/card/'
     print(url_card)
     card_items = []
@@ -79,13 +81,15 @@ def create_card(usr_id, card_number):
     for item in basket:
         card_items.append(item)
     print(card_items)
+    card_number = random.randint(1000, 9999)
     #requests.post(url_card, data={'card_items': card_items, 'user': usr_id, 'card_number': card_number})
     payload = {'card_items': card_items, 'user': usr_id, 'card_number': card_number}
+    #payload = {'card_items': card_items, 'user': usr_id}
     requests.post(url_card, json=payload)
 
 
-def get_card(usr_id, crd_id):
-    url_card = 'http://127.0.0.1:8000/api/v1/orders/all/' + f'{usr_id}/' + f'{crd_id}/'
+def get_card(crd_n):
+    url_card = 'http://127.0.0.1:8000/api/v1/orders/card/' + f'{crd_n}/'
     return json.loads(requests.get(url_card).text)
 
 # def get_basket_last(usr_id):

@@ -1,4 +1,8 @@
+import os
 from rest_framework import generics
+from django.core.mail import EmailMessage
+from django.http import HttpResponse
+from mainfitclub.settings import config
 from . import models
 from . import serializers
 
@@ -102,8 +106,10 @@ class CardItemCreateView(generics.ListCreateAPIView):
 class ClientCardListView(generics.ListAPIView):
     def get_queryset(self):
         queryset = super(ClientCardListView, self).get_queryset()
-        queryset = queryset.filter(user=self.kwargs['pk_u'],
-                                   card_number=self.kwargs['pk_c'])
+        # queryset = queryset.filter(user=self.kwargs['pk_u'],
+        #                            card_number=self.kwargs['pk_c'])
+
+        queryset = queryset.filter(card_number=self.kwargs['pk_c'])
         return queryset
     queryset = models.ClientCard.objects.all()
     serializer_class = serializers.ClientCardListSerializer
@@ -116,3 +122,19 @@ class CardItemListView(generics.ListAPIView):
         return queryset
     queryset = models.CardItem.objects.all()
     serializer_class = serializers.CardItemDetailsSerializer
+
+
+#отправка почты
+
+
+def send_email_with_attach(request, emailto):
+    content = "Расписание тренировок"
+    email = EmailMessage("Hello, качок", content, "o.spresov@gmail.com", [emailto])
+    filename = 'schedules/schedule_club.pdf'
+    fd = open(filename, 'rb')
+    email.attach(filename, fd.read(), 'text/plain')
+
+    res = email.send()
+    return HttpResponse('%s' % res)
+
+

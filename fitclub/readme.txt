@@ -53,7 +53,7 @@ http://127.0.0.1:8000/api/v1/orders/order/1/3/4/
 http://127.0.0.1:8000/api/v1/orders/dates/
 http://127.0.0.1:8000/api/v1/orders/create/card/
 http://127.0.0.1:8000/api/v1/orders/create/card_item/
-http://127.0.0.1:8000/api/v1/orders/all/1/336/
+http://127.0.0.1:8000/api/v1/orders/card/1/336/
 http://127.0.0.1:8000/api/v1/orders/card_items/all/
 
 http://127.0.0.1:8000/api/v1/orders/create/basket/
@@ -61,6 +61,8 @@ http://127.0.0.1:8000/api/v1/orders/basket/2/
 http://127.0.0.1:8000/api/v1/orders/basket/2/all/
 
 http://127.0.0.1:8000/api/v1/orders/basket/last/2/
+
+http://127.0.0.1:8000/api/v1/orders/email/spoliv@rambler.ru/
 
 {"card_items": [{"date": 4, "time_period": 5, "service_id": 8},
                 {"date": 1, "time_period": 3, "service_id": 5}],

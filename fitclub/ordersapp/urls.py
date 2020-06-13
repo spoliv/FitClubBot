@@ -1,5 +1,6 @@
 from django.urls import include, path
 from django.conf.urls import url
+import ordersapp.views as ordersapp
 
 from . import views
 
@@ -14,11 +15,14 @@ urlpatterns = [
     path('period/<int:pk>/', views.PeriodView.as_view()),
     path('create/card/', views.ClientCardCreateView.as_view()),
     path('create/card_item/', views.CardItemCreateView.as_view()),
-    path('all/<int:pk_u>/<int:pk_c>/', views.ClientCardListView.as_view()),
+    # path('card/<int:pk_u>/<int:pk_c>/', views.ClientCardListView.as_view()),
+    path('card/<int:pk_c>/', views.ClientCardListView.as_view()),
     path('card_items/all/', views.CardItemListView.as_view()),
     path('create/basket/', views.BasketCreateView.as_view()),
     path('basket/<int:pk>/', views.BasketListView.as_view()),
     path('basket/<int:pk>/all/', views.BasketOnlyIdView.as_view()),
+
+    url(r'^email/(?P<emailto>[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4})/', ordersapp.send_email_with_attach)
 
     #path('basket/last/<int:pk>/', views.BasketLastListView.as_view()),
 ]

@@ -70,6 +70,7 @@ class ClientCardCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClientCard
         fields = ('id', 'card_number', 'user', 'card_items', 'client_card_cost')
+        #fields = ('id', 'user', 'card_items', 'client_card_cost')
 
     def create(self, validated_data):
         print(validated_data)
@@ -112,6 +113,6 @@ class ClientCardListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ClientCard
-        fields = ('id', 'card_number', 'user', 'card_items', 'client_card_cost')
+        fields = ('id', 'card_number', 'user', 'card_items', 'client_card_cost', 'date_created')
 
 
