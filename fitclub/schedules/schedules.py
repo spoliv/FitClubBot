@@ -4,6 +4,10 @@ from services import utils
 
 class CustomPDF(FPDF):
 
+    def __init__(self, orientation, unit, format, token):
+        self.token = token
+        super(CustomPDF, self).__init__(orientation, unit, format)
+
     def header(self):
         # Устанавливаем лого
         self.image('E:/Курсовой проект 2020/FitClubBot/fitclub/images/club_logo.jpg', 10, 6, 30)
@@ -33,7 +37,7 @@ class CustomPDF(FPDF):
     def simple_table(self, crd_n, spacing=1):
         data = [['N n/n', 'Услуга', 'Дата', 'Время тренировки']]
 
-        card = utils.get_card(crd_n)
+        card = utils.get_card(crd_n, token=self.token)
         card_num = card[0]['card_number']
         name = card[0]['user']
         date_created = card[0]['date_created'][:10]
@@ -79,14 +83,14 @@ class CustomPDF(FPDF):
         self.cell(0, 10, page, 0, 0, 'C')
 
 
-def create_pdf(pdf_path, crd_n):
-    pdf = CustomPDF(orientation='L', unit='mm', format='A4')
-    # Создаем особое значение {nb}
-    pdf.alias_nb_pages()
-    pdf.add_page()
-    pdf.simple_table(crd_n, spacing=2)
-    pdf.output(pdf_path)
+# def create_pdf(pdf_path, crd_n):
+#     pdf = CustomPDF(orientation='L', unit='mm', format='A4')
+#     # Создаем особое значение {nb}
+#     pdf.alias_nb_pages()
+#     pdf.add_page()
+#     pdf.simple_table(crd_n, spacing=2)
+#     pdf.output(pdf_path)
 
 
-if __name__ == '__main__':
-    create_pdf('schedule_club.pdf', 6591)
+# if __name__ == '__main__':
+#     create_pdf('schedule_club.pdf', 6591)

@@ -40,9 +40,9 @@ class Order(models.Model):
 
 class ClientCard(models.Model):
     card_number = models.SlugField(max_length=4, unique=True)
-    #card_number = models.IntegerField(default=0)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='card')
     date_created = models.DateTimeField(verbose_name='создан', auto_now_add=True)
+    is_active = models.BooleanField(verbose_name='активен', default=False)
 
     @property
     def client_card_cost(self):

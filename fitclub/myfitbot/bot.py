@@ -1,7 +1,9 @@
 import telebot
+from telebot import types
 from users import utils
-#from ordersapp import utils
 from services import utils
+from schedules.schedules import CustomPDF
+import re
 
 from mainfitclub import settings
 
@@ -32,8 +34,6 @@ def iq_callback(query):
         global SERVICE_ID
         SERVICE_ID = data.split()[1]
         print(SERVICE_ID)
-
-        #print(service_id[1])
         get_dates_callback(query)
     elif data.startswith('period'):
         global DATE_ID
@@ -45,6 +45,10 @@ def iq_callback(query):
         PERIOD_ID = data.split()[1]
         print(PERIOD_ID)
         get_for_zakaz()
+    elif data.startswith('delete_msg'):
+        global MSG_ID
+        MSG_ID = data.split()[1]
+        delete_msg_callback(query)
     else:
         get_services_callback(query)
 
@@ -98,7 +102,6 @@ def send_services_result(message, cat_id):
     for service in services:
         service_id = service['id']
         keyboard.row(
-            #telebot.types.InlineKeyboardButton(service['name'], callback_data=service['id'])
             telebot.types.InlineKeyboardButton(service['name'], callback_data=f'date {service_id}')
         )
     bot.send_message(
@@ -118,11 +121,6 @@ def send_dates_result(message):
     bot.send_chat_action(message.chat.id, 'typing')
     dates = utils.get_dates()
     keyboard = telebot.types.InlineKeyboardMarkup()
-    #menu = telebot.types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True, one_time_keyboard=True)
-    # for date in dates:
-    #     keyboard.row(
-    #         telebot.types.InlineKeyboardButton(date['date'], callback_data='period')
-    #     )
     for date in dates:
         date_id = date['id']
         row = telebot.types.InlineKeyboardButton(date['date'], callback_data=f'period {date_id}')
@@ -162,18 +160,11 @@ def get_for_zakaz():
     print(f'SERVICE_ID = {SERVICE_ID}, DATE_ID = {DATE_ID}, PERIOD_ID = {PERIOD_ID}')
 
 
-# service_id = SERVICE_ID
-# date_id = DATE_ID
-# period_id = PERIOD_ID
-
-
 @bot.message_handler(commands=["zakaz"])
 def zakaz_command(message):
     pre_order = {}
     service = utils.get_service(SERVICE_ID)
-    #print(service)
     date = utils.get_date(DATE_ID)
-    #print(date)
     period = utils.get_period(PERIOD_ID)
     quantity = service[0]['quantity']
     pre_order['name_service'] = service[0]['name']
@@ -197,8 +188,8 @@ def zakaz_command(message):
 
 @bot.message_handler(commands=["last"])
 def basket_last_command(message):
-    utils.send_basket(DATE_ID, PERIOD_ID, SERVICE_ID, 1)
-    basket = utils.get_basket(1)
+    utils.send_basket(DATE_ID, PERIOD_ID, SERVICE_ID, TOKEN_LOG)
+    basket = utils.get_basket(TOKEN_LOG)
     print(basket)
     service = basket[-1]['service_id']
     date = basket[-1]['date']
@@ -218,7 +209,7 @@ def basket_last_command(message):
 
 @bot.message_handler(commands=["basket"])
 def basket_command(message):
-    basket = utils.get_basket(1)
+    basket = utils.get_basket(TOKEN_LOG)
     bot.send_message(
         message.chat.id,
         f'В Вашей корзине следующие услуги: \n ')
@@ -239,20 +230,30 @@ def basket_command(message):
 
 @bot.message_handler(commands=["create_card"])
 def card_create_command(message):
-    utils.create_card(1)
-    #utils.create_card(1, 336)
+    utils.create_card(TOKEN_LOG)
     bot.send_message(
         message.chat.id, 'Ok, Вы сформировали карту клиента')
 
 
+@bot.message_handler(commands=["cards"])
+def cards_command(message):
+    numbers = utils.get_cards_nums(TOKEN_LOG)
+    for num in numbers:
+        card_number = num['card_number']
+        bot.send_message(
+            message.chat.id, card_number)
+
+
 @bot.message_handler(commands=["card"])
 def card_command(message):
-    card = utils.get_card(1, 336)
+    global CARD_COST, CARD_NUM
+    card = utils.get_card(8688, TOKEN_LOG)
     user = card[0]['user']
-    card_cost = card[0]['client_card_cost']
+    CARD_NUM = card[0]['card_number']
+    CARD_COST = card[0]['client_card_cost']
     bot.send_message(
         message.chat.id,
-        f'Ok, {user} Вы сформировали карту клиента стоимостью {card_cost} руб. \n'
+        f'Ok, {user} Вы сформировали карту клиента стоимостью {CARD_COST} руб. \n'
         f'Перечень услуг :')
     for item in card[0]['card_items']:
         service = item['service_id']
@@ -261,6 +262,113 @@ def card_command(message):
         bot.send_message(
             message.chat.id,
             f'{service}  {date}  {time_period}')
+    bot.send_message(message.chat.id, 'Для оплаты нажмите /buy')
+
+
+@bot.message_handler(commands=['log'])
+def log_handler(message):
+    msg = bot.send_message(message.chat.id, 'Введите логин (email)')
+    bot.register_next_step_handler(msg, ask_log)
+
+
+def ask_log(message):
+    global EMAIL
+    EMAIL = message.text
+    tpl = "[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}"
+    if re.match(tpl, EMAIL) is not None:
+        bot.send_message(
+            message.chat.id, 'Для ввода пароля нажмите /password')
+    else:
+        msg = bot.send_message(
+            message.chat.id, 'Вы ввели неправильный email, попробуйте еще раз')
+        bot.register_next_step_handler(msg, ask_log)
+    print(EMAIL)
+
+
+@bot.message_handler(commands=['password'])
+def pass_handler(message):
+    msg = bot.send_message(message.chat.id, 'Введите пароль')
+    bot.register_next_step_handler(msg, ask_pas)
+
+
+def ask_pas(message):
+    global PASSWORD
+    PASSWORD = message.text
+    msg_id = message.message_id
+    keyboard = telebot.types.InlineKeyboardMarkup()
+    keyboard.row(telebot.types.InlineKeyboardButton('Подтвердить', callback_data=f'delete_msg {msg_id}'))
+    bot.send_message(
+        message.chat.id, 'Ок, нажмите Подтвердить',
+        reply_markup=keyboard)
+
+    print(PASSWORD, msg_id)
+
+
+def delete_msg_callback(query):
+    bot.answer_callback_query(query.id)
+    delete_msg(query.message)
+
+
+def delete_msg(message):
+    bot.delete_message(message.chat.id, MSG_ID)
+    global TOKEN_LOG
+    try:
+        TOKEN_LOG = utils.get_token_login(EMAIL, PASSWORD)['key']
+        bot.send_message(message.chat.id, 'Вы вошли в систему')
+    except KeyError:
+        bot.send_message(message.chat.id, 'Вы ввели неверный login или password.'
+  
+                                          'Попробуйте еще разок /log')
+
+
+@bot.message_handler(commands=["logout"])
+def logout_command(message):
+    utils.token_logout(TOKEN_LOG)
+    bot.send_message(message.chat.id, 'Вы вышли из системы')
+
+
+@bot.message_handler(commands=['buy'])
+def process_buy_command(message):
+    if settings.BUY_TOKEN.split(':')[1] == 'TEST':
+        bot.send_message(message.chat.id, 'Детали платежа')
+        bot.send_invoice(
+            message.chat.id,
+            title=f'Карта клиента № {CARD_NUM}',
+            description='Здесь надо указать реквизиты тестовой карты',
+            provider_token=settings.BUY_TOKEN,
+            currency='rub',
+            #is_flexible=False,  # True если конечная цена зависит от способа доставки
+            prices=[types.LabeledPrice(label='Руб.', amount=int(CARD_COST) * 100)],
+            start_parameter='payment_of_client_card',
+            invoice_payload='some-invoice-payload-for-our-internal-use'
+        )
+
+
+@bot.pre_checkout_query_handler(func=lambda query: True)
+def process_pre_checkout_query(pre_checkout_query: types.PreCheckoutQuery):
+    bot.answer_pre_checkout_query(pre_checkout_query.id, ok=True)
+
+
+@bot.message_handler(content_types=['successful_payment'])
+def process_successful_payment(message: types.Message):
+    print('successful_payment:')
+    print(message)
+    transaction_num = message.successful_payment.provider_payment_charge_id
+    if transaction_num is not None:
+        utils.make_active(CARD_NUM, TOKEN_LOG)
+        pdf = CustomPDF(orientation='L', unit='mm', format='A4', token=TOKEN_LOG)
+        # Создаем особое значение {nb}
+        pdf.alias_nb_pages()
+        pdf.add_page()
+        pdf.simple_table(CARD_NUM, spacing=2)
+        pdf.output('schedule_club.pdf')
+        utils.send_email(EMAIL)
+
+    print(transaction_num)
+
+
+
+
 
 
 

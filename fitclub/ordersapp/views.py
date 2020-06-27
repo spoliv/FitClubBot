@@ -1,10 +1,13 @@
 import os
 from rest_framework import generics
 from django.core.mail import EmailMessage
+#from django.core import mail
 from django.http import HttpResponse
+from rest_framework.permissions import IsAuthenticated
 from mainfitclub.settings import config
 from . import models
 from . import serializers
+from users.permissions import IsCardOwnerOrReadOnly
 
 
 # class ServiceCategoryListView(generics.ListAPIView):
@@ -64,25 +67,31 @@ class OrderCreateView(generics.ListCreateAPIView):
 
 
 class BasketCreateView(generics.ListCreateAPIView):
+
+    queryset = models.Basket.objects.all()
     serializer_class = serializers.BasketCreateSerializer
+    permission_classes = [IsAuthenticated, ]
 
 
 class BasketOnlyIdView(generics.ListAPIView):
     def get_queryset(self):
         queryset = super(BasketOnlyIdView, self).get_queryset()
-        queryset = queryset.filter(user=self.kwargs['pk'])
+        # queryset = queryset.filter(user=self.kwargs['pk'])
+        queryset = queryset.filter(user=self.request.user.id)
         return queryset
     queryset = models.Basket.objects.all()
     serializer_class = serializers.BasketOnlyIdSerializer
+    permission_classes = [IsCardOwnerOrReadOnly, IsAuthenticated, ]
 
 
 class BasketListView(generics.ListAPIView):
     def get_queryset(self):
         queryset = super(BasketListView, self).get_queryset()
-        queryset = queryset.filter(user=self.kwargs['pk'])
+        queryset = queryset.filter(user=self.request.user.id)
         return queryset
     queryset = models.Basket.objects.all()
     serializer_class = serializers.BasketListSerializer
+    permission_classes = [IsCardOwnerOrReadOnly, IsAuthenticated, ]
 
 
 # class BasketLastListView(generics.ListAPIView):
@@ -96,23 +105,34 @@ class BasketListView(generics.ListAPIView):
 
 
 class ClientCardCreateView(generics.ListCreateAPIView):
+    queryset = models.ClientCard.objects.all()
     serializer_class = serializers.ClientCardCreateSerializer
+    permission_classes = [IsAuthenticated, ]
 
 
 class CardItemCreateView(generics.ListCreateAPIView):
     serializer_class = serializers.CardItemCreateSerializer
+    permission_classes = [IsAuthenticated, ]
 
 
 class ClientCardListView(generics.ListAPIView):
     def get_queryset(self):
         queryset = super(ClientCardListView, self).get_queryset()
-        # queryset = queryset.filter(user=self.kwargs['pk_u'],
-        #                            card_number=self.kwargs['pk_c'])
-
-        queryset = queryset.filter(card_number=self.kwargs['pk_c'])
+        queryset = queryset.filter(user=self.request.user.id, card_number=self.kwargs['pk_c'])
         return queryset
     queryset = models.ClientCard.objects.all()
     serializer_class = serializers.ClientCardListSerializer
+    permission_classes = [IsCardOwnerOrReadOnly, ]
+
+
+class ClientCardsListView(generics.ListAPIView):
+    def get_queryset(self):
+        queryset = super(ClientCardsListView, self).get_queryset()
+        queryset = queryset.filter(user=self.request.user.id)
+        return queryset
+    queryset = models.ClientCard.objects.all()
+    serializer_class = serializers.ClientCardsListSerializer
+    permission_classes = [IsCardOwnerOrReadOnly, ]
 
 
 class CardItemListView(generics.ListAPIView):
@@ -124,13 +144,24 @@ class CardItemListView(generics.ListAPIView):
     serializer_class = serializers.CardItemDetailsSerializer
 
 
+class CardActivateView(generics.UpdateAPIView):
+    queryset = models.ClientCard.objects.all()
+    serializer_class = serializers.ClientCardActivateSerializer
+    permission_classes = [IsCardOwnerOrReadOnly, ]
+    lookup_field = 'card_number'
+    lookup_url_kwarg = 'pk_card'
+
+
+
+
+
 #отправка почты
 
 
 def send_email_with_attach(request, emailto):
     content = "Расписание тренировок"
     email = EmailMessage("Hello, качок", content, "o.spresov@gmail.com", [emailto])
-    filename = 'schedules/schedule_club.pdf'
+    filename = 'myfitbot/schedule_club.pdf'
     fd = open(filename, 'rb')
     email.attach(filename, fd.read(), 'text/plain')
 

@@ -12,8 +12,6 @@ def get_servicecategories():
     return json.loads(requests.get(URL_CAT).text)
 
 
-#print(get_servicecategories())
-
 def get_services(cat_id):
     url_servs = 'http://127.0.0.1:8000/api/v1/services/category/' + f'{cat_id}/'
     print(url_servs)
@@ -55,44 +53,87 @@ def send_order(date_id, period_id, service_id, quantity):
     requests.post(url_ordr, data={'date': date_id, 'time_period': period_id, 'service_id': service_id, 'quantity': quantity})
 
 
-def send_basket(date_id, period_id, service_id, user_id):
+def send_basket(date_id, period_id, service_id, token):
     url_bskt = 'http://127.0.0.1:8000/api/v1/orders/create/basket/'
-    requests.post(url_bskt, data={'user': user_id, 'date': date_id, 'time_period': period_id, 'service_id': service_id})
+    headers = {'Authorization': 'Token ' + token}
+    requests.post(url_bskt, headers=headers, data={
+                                                  'date': date_id,
+                                                   'time_period': period_id,
+                                                   'service_id': service_id
+    })
 
 
-def get_basket(usr_id):
-    url_bskt = 'http://127.0.0.1:8000/api/v1/orders/basket/' + f'{usr_id}/'
+def get_basket(token):
+    url_bskt = 'http://127.0.0.1:8000/api/v1/orders/basket/'
+    headers = {'Authorization': 'Token ' + token}
     print(url_bskt)
-    return json.loads(requests.get(url_bskt).text)
+    return json.loads(requests.get(url_bskt, headers=headers).text)
 
 
-def get_basket_for_card(usr_id):
-    url_bskt = 'http://127.0.0.1:8000/api/v1/orders/basket/' + f'{usr_id}/' + 'all/'
-    print(url_bskt)
-    return json.loads(requests.get(url_bskt).text)
+def get_basket_for_card(token):
+    url_bsk_all = 'http://127.0.0.1:8000/api/v1/orders/basket/all/'
+    print(url_bsk_all)
+    headers = {'Authorization': 'Token ' + token}
+    return json.loads(requests.get(url_bsk_all, headers=headers).text)
 
 
-#def create_card(usr_id, card_number):
-def create_card(usr_id):
+def create_card(token):
     url_card = 'http://127.0.0.1:8000/api/v1/orders/create/card/'
     print(url_card)
     card_items = []
-    basket = get_basket_for_card(usr_id)
+    basket = get_basket_for_card(token)
     for item in basket:
         card_items.append(item)
     print(card_items)
     card_number = random.randint(1000, 9999)
-    #requests.post(url_card, data={'card_items': card_items, 'user': usr_id, 'card_number': card_number})
-    payload = {'card_items': card_items, 'user': usr_id, 'card_number': card_number}
-    #payload = {'card_items': card_items, 'user': usr_id}
-    requests.post(url_card, json=payload)
+    payload = {'card_items': card_items, 'card_number': card_number}
+    headers = {'Authorization': 'Token ' + token}
+    requests.post(url_card, headers=headers, json=payload)
 
 
-def get_card(crd_n):
+def get_card(crd_n, token):
     url_card = 'http://127.0.0.1:8000/api/v1/orders/card/' + f'{crd_n}/'
-    return json.loads(requests.get(url_card).text)
+    headers = {'Authorization': 'Token ' + token}
 
-# def get_basket_last(usr_id):
-#     url_bskt_ls = 'http://127.0.0.1:8000/api/v1/orders/basket/last/' + f'{usr_id}/'
-#     print(url_bskt_ls)
-#     return json.loads(requests.get(url_bskt_ls).text)
+    return json.loads(requests.get(url_card, headers=headers).text)
+
+
+def get_cards_nums(token):
+    url_cards = 'http://127.0.0.1:8000/api/v1/orders/card/all/'
+    headers = {'Authorization': 'Token ' + token}
+    return json.loads(requests.get(url_cards, headers=headers).text)
+
+
+def get_token_login(email, password):
+    url_tok = 'http://127.0.0.1:8000/api/v1/rest-auth/login/'
+    result = requests.post(url_tok, data={'email': email, 'password': password})
+    return json.loads(result.text)
+
+
+def token_logout(token):
+    url_out = 'http://127.0.0.1:8000/api/v1/rest-auth/logout/'
+    headers = {'Authorization': 'Token ' + token}
+    requests.post(url_out, headers=headers)
+
+
+def make_reg(email, password):
+    url_reg = 'http://127.0.0.1:8000/api/v1/rest-auth/registration/'
+    requests.post(url_reg, data={'email': email, 'password1': password, 'password2': password})
+
+
+def make_active(crd_n, token):
+    url_act = 'http://127.0.0.1:8000/api/v1/orders/card/' + f'{crd_n}' + '/activate/'
+    headers = {'Authorization': 'Token ' + token}
+    requests.put(url_act, data={'is_active': True}, headers=headers)
+
+
+def send_email(email):
+    url_email = 'http://127.0.0.1:8000/api/v1/orders/email/' + f'{email}/'
+    requests.get(url_email)
+
+
+if __name__ == '__main__':
+    res = get_token_login('spoliv@rambler.ru', 'geekbrains')
+    # res = make_reg('spoliv@rambler.ru', 'geekbrains')
+    print(res['key'])
+    #make_reg('spoliv@rambler.ru', 'geekbrains')

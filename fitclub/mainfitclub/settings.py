@@ -39,6 +39,8 @@ DEBUG = config.getboolean('main', 'DEBUG')
 
 TOKEN = config.get('main', 'TOKEN')
 
+BUY_TOKEN = config.get('main', 'BUY_TOKEN')
+
 ALLOWED_HOSTS = ['127.0.0.1']
 
 AUTHENTICATION_BACKENDS = (
@@ -82,7 +84,7 @@ REST_FRAMEWORK = {
 
 # EMAIL_HOST = 'smtp.gmail.com'
 # EMAIL_PORT = 587
-# EMAIL_HOST_USER = "hello@hello.ru"
+# EMAIL_HOST_USER = "somebody@gmail.com"
 # EMAIL_HOST_PASSWORD = "password"
 # EMAIL_USE_TLS = True
 

@@ -16,6 +16,8 @@ class PeriodSerializer(serializers.ModelSerializer):
 
 
 class BasketCreateSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = Basket
         fields = ('user', 'date', 'time_period', 'service_id')
@@ -65,6 +67,7 @@ class CardItemCreateSerializer(serializers.ModelSerializer):
 
 
 class ClientCardCreateSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     card_items = CardItemCreateSerializer(many=True)
 
     class Meta:
@@ -116,3 +119,15 @@ class ClientCardListSerializer(serializers.ModelSerializer):
         fields = ('id', 'card_number', 'user', 'card_items', 'client_card_cost', 'date_created')
 
 
+class ClientCardsListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ClientCard
+        fields = ('card_number',)
+
+
+class ClientCardActivateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ClientCard
+        fields = ('is_active',)
