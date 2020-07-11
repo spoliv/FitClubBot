@@ -23,6 +23,7 @@ urlpatterns = [
     #path('basket/<int:pk>/', views.BasketListView.as_view()),
     path('basket/', views.BasketListView.as_view()),
     path('basket/all/', views.BasketOnlyIdView.as_view()),
+    path('basket/del/<int:pk_bsk>/', views.BasketDeleteView.as_view()),
 
     url(r'^email/(?P<emailto>[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4})/', ordersapp.send_email_with_attach)
 

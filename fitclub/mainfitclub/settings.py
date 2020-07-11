@@ -41,7 +41,9 @@ TOKEN = config.get('main', 'TOKEN')
 
 BUY_TOKEN = config.get('main', 'BUY_TOKEN')
 
-ALLOWED_HOSTS = ['127.0.0.1']
+#ALLOWED_HOSTS = ['127.0.0.1']
+
+ALLOWED_HOSTS = ['*']
 
 AUTHENTICATION_BACKENDS = (
      #'django.contrib.auth.backends.ModelBackend',
@@ -142,6 +144,17 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+# DATABASES = {
+#
+#     'default': {
+#         'NAME': 'fitclub',
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'USER': 'fitbot',
+#         'PASSWORD': 'geekbrains',
+#         'HOST': 'localhost'
+#     }
+# }
 
 
 # Password validation

@@ -63,6 +63,8 @@ http://127.0.0.1:8000/api/v1/orders/create/basket/
 http://127.0.0.1:8000/api/v1/orders/basket/2/
 http://127.0.0.1:8000/api/v1/orders/basket/2/all/
 
+http://127.0.0.1:8000/api/v1/orders/basket/del/
+
 http://127.0.0.1:8000/api/v1/orders/basket/last/2/
 
 http://127.0.0.1:8000/api/v1/orders/email/spoliv@rambler.ru/

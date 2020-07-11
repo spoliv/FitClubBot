@@ -1,5 +1,6 @@
+import fpdf
 from fpdf import FPDF
-from services import utils
+from myfitbot import utils
 
 
 class CustomPDF(FPDF):
@@ -11,10 +12,8 @@ class CustomPDF(FPDF):
     def header(self):
         # Устанавливаем лого
         self.image('E:/Курсовой проект 2020/FitClubBot/fitclub/images/club_logo.jpg', 10, 6, 30)
-        # self.add_font('DejaVu', '', 'C:\Windows\Fonts\DejaVuSansCondensed.ttf', uni=True)
-        # self.set_font('DejaVu', '', 14)
-        self.add_font('Arial', '', 'C:/Windows/Fonts/arial.ttf', uni=True)
-        self.set_font('Arial', size=14)
+        self.add_font('DejaVu', '', 'C:\Windows\Fonts\DejaVuSansCondensed.ttf', uni=True)
+        self.set_font('DejaVu', '', 14)
 
         # Добавляем адрес
         self.cell(50)
@@ -63,8 +62,8 @@ class CustomPDF(FPDF):
 
 
             #items.append(service, date, time_period)
-        self.add_font('Arial', '', 'C:/Windows/Fonts/arial.ttf', uni=True)
-        self.set_font("Arial", size=12)
+        self.add_font('DejaVu', '', 'C:\Windows\Fonts\DejaVuSansCondensed.ttf', uni=True)
+        self.set_font('DejaVu', '', 12)
         col_width = self.w / 4.5
         row_height = self.font_size
         for row in data:
@@ -77,7 +76,6 @@ class CustomPDF(FPDF):
         self.set_y(-10)
 
         self.set_font('Arial', 'I', 8)
-
         # Добавляем номер страницы
         page = 'Page ' + str(self.page_no()) + '/{nb}'
         self.cell(0, 10, page, 0, 0, 'C')
@@ -92,5 +90,5 @@ class CustomPDF(FPDF):
 #     pdf.output(pdf_path)
 
 
-# if __name__ == '__main__':
+#if __name__ == '__main__':
 #     create_pdf('schedule_club.pdf', 6591)

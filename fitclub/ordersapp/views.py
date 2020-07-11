@@ -152,7 +152,12 @@ class CardActivateView(generics.UpdateAPIView):
     lookup_url_kwarg = 'pk_card'
 
 
-
+class BasketDeleteView(generics.DestroyAPIView):
+    queryset = models.Basket.objects.all()
+    serializer_class = serializers.BasketOnlyIdSerializer
+    permission_classes = [IsCardOwnerOrReadOnly, IsAuthenticated, ]
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk_bsk'
 
 
 #отправка почты

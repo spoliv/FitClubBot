@@ -37,7 +37,8 @@ class BasketListSerializer(serializers.ModelSerializer):
 class BasketOnlyIdSerializer(serializers.ModelSerializer):
     class Meta:
         model = Basket
-        fields = ('date', 'time_period', 'service_id')
+        #fields = ('date', 'time_period', 'service_id', 'user')
+        fields = ('__all__')
 
 
 class OrderSerializer(serializers.ModelSerializer):
