@@ -117,14 +117,14 @@ class ClientCardListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ClientCard
-        fields = ('id', 'card_number', 'user', 'card_items', 'client_card_cost', 'date_created')
+        fields = ('id', 'card_number', 'user', 'card_items', 'client_card_cost', 'date_created', 'is_active')
 
 
 class ClientCardsListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ClientCard
-        fields = ('card_number',)
+        fields = ('card_number', 'is_active')
 
 
 class ClientCardActivateSerializer(serializers.ModelSerializer):
@@ -132,3 +132,4 @@ class ClientCardActivateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClientCard
         fields = ('is_active',)
+

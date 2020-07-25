@@ -17,7 +17,7 @@ urlpatterns = [
     path('create/card_item/', views.CardItemCreateView.as_view()),
     path('card/all/', views.ClientCardsListView.as_view()),
     path('card/<int:pk_c>/', views.ClientCardListView.as_view()),
-    path('card/<int:pk_card>/activate/', views.CardActivateView.as_view()),
+    path('card/activate/<int:pk_card>/', views.CardActivateView.as_view()),
     path('card_items/all/', views.CardItemListView.as_view()),
     path('create/basket/', views.BasketCreateView.as_view()),
     #path('basket/<int:pk>/', views.BasketListView.as_view()),
