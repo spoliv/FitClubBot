@@ -1,11 +1,6 @@
 <center>
 
 <p align="center"><img src="img_md/bot.jpg" width="300" height="300"></p>
-<p align="center">
-<b>FitClubBot<b/>
-</p>
-
-
 
 </center>
 
