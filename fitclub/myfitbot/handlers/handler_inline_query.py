@@ -16,9 +16,6 @@ class HandlerInlineQuery(Handler):
         @self.bot.callback_query_handler(func=lambda call: True)
         def iq_callback(query):
             data = query.data
-            # if data.startswith('get-'):
-            #     get_users_callback(query)
-
             if data.startswith('service'):
                 self.get_dates_callback(query)
 
@@ -36,7 +33,6 @@ class HandlerInlineQuery(Handler):
     def get_services_on_category(self, query):
         self.bot.answer_callback_query(query.id)
         self.send_services_result(query.message, cat_id=query.data)
-        print(query)
 
     def send_services_result(self, message, cat_id):
         self.bot.send_chat_action(message.chat.id, 'typing')
@@ -53,7 +49,6 @@ class HandlerInlineQuery(Handler):
         service_name = data[2]
         self.bot.answer_callback_query(query.id, f'Вы выбрали {service_name}', show_alert=True)
         self.send_dates_result(query.message)
-        print(query)
 
     def send_dates_result(self, message):
         self.bot.send_chat_action(message.chat.id, 'typing')
@@ -74,7 +69,6 @@ class HandlerInlineQuery(Handler):
         self.date_id = utils.get_dates()[-1]['id']
         self.bot.answer_callback_query(query.id, f'Вы выбрали {date_name}', show_alert=True)
         self.send_periods_result(query.message)
-        print(query)
 
     def send_periods_result(self, message):
         self.bot.send_chat_action(message.chat.id, 'typing')
@@ -91,12 +85,10 @@ class HandlerInlineQuery(Handler):
         period_name = data[2]
         self.bot.answer_callback_query(query.id, f'Вы выбрали {period_name}', show_alert=True)
         self.put_in_basket(query.message)
-        print(query)
 
     def put_in_basket(self, message):
         utils.send_basket(self.date_id, self.period_id, self.service_id, self.handler_text.token_log)
         basket = utils.get_basket(self.handler_text.token_log)
-        print(basket)
         service = basket[-1]['service_id']
         date = basket[-1]['date']
         period = basket[-1]['time_period']

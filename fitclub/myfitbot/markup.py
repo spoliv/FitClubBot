@@ -28,9 +28,6 @@ class Keyboards:
         """
         Создает и возвращает инлайн кнопку по входным параметрам
         """
-        # if len(data) == 0:
-        #     data = str(name.id)
-        #return InlineKeyboardButton(str(name), callback_data=data)
         return InlineKeyboardButton(name, callback_data=data)
 
     def remove_menu(self):
@@ -47,10 +44,8 @@ class Keyboards:
         itm_btn_1 = self.set_btn('Ваши карты клиента')
         itm_btn_2 = self.set_btn('Сформировать новую карту')
         itm_btn_3 = self.set_btn('Выход')
-        #itm_btn_4 = self.set_btn('Настройки')
         # рассположение кнопок в меню
         self.markup.row(itm_btn_1, itm_btn_2)
-        #self.markup.row(itm_btn_3, itm_btn_4)
         self.markup.row(itm_btn_3)
         return self.markup
 
@@ -109,7 +104,6 @@ class Keyboards:
         """
         Создает разметку кнопок с номером карты для выбора карты для просмотра и возвращает разметку
         """
-        #self.markup = InlineKeyboardMarkup(row_width=3)
         numbers = utils.get_cards_nums(token)
         if len(numbers) == 0:
             self.markup = ReplyKeyboardMarkup(resize_keyboard=True)

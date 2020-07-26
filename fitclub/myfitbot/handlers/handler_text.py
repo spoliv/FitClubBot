@@ -17,7 +17,6 @@ class HandlerAllText(Handler):
         def set_text_callback(message):
             if message.text == 'Сформировать новую карту' or \
                     message.text == 'Добавить услугу в карту клиента':
-                print(message)
                 self.bot.delete_message(message.chat.id, message.message_id - 1)
                 self.bot.delete_message(message.chat.id, message.message_id)
                 self.bot.send_message(
@@ -84,7 +83,6 @@ class HandlerAllText(Handler):
                 f'Цена {price} руб. \n ' \
                 f'Дата тренировки {date} \n ' \
                 f'Время тренировки {period} \n \n'
-        print(msg_str)
         self.bot.delete_message(message.chat.id, message.message_id - 1)
         self.bot.delete_message(message.chat.id, message.message_id)
         self.bot.send_message(
@@ -94,7 +92,6 @@ class HandlerAllText(Handler):
     def create_card(self, message):
         utils.create_card(self.token_log)
         numbers = utils.get_cards_nums(self.token_log)
-        print(numbers)
         self.card_num = numbers[-1]['card_number']
         self.bot.delete_message(message.chat.id, message.message_id - 1)
         self.show_created_card(message)
@@ -107,7 +104,6 @@ class HandlerAllText(Handler):
             'Выберите вашу карту. Если у Вас нет карт сформируйте новую',
             reply_markup=self.keyboard.cards_menu(self.token_log)
         )
-        print(message)
 
     def show_created_card(self, message):
         card = utils.get_card(self.card_num, self.token_log)
@@ -126,7 +122,6 @@ class HandlerAllText(Handler):
                     f'Перечень услуг : \n' + msg_str, reply_markup=self.keyboard.make_payment())
 
     # Регистрация нового пользователя
-    # @bot.message_handler(commands=['reg'])
     def reg_handler(self, message):
         self.bot.delete_message(message.chat.id, message.message_id - 1)
         self.bot.delete_message(message.chat.id, message.message_id)
@@ -198,8 +193,6 @@ class HandlerAllText(Handler):
         self.bot.delete_message(message.chat.id, message.message_id - 2)
         try:
             self.token_log = utils.get_token_login(self.email, self.password)['key']
-            print(self.token_log)
-            print(type(self.token_log))
             self.bot.send_message(
                 message.chat.id, 'Вы вошли в систему',
                 reply_markup=self.keyboard.start_menu()

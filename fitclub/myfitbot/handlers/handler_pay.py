@@ -20,11 +20,8 @@ class HandlerPayment(Handler):
 
         @self.bot.message_handler(content_types=['successful_payment'])
         def process_successful_payment(message: types.Message):
-            print('successful_payment:')
-            print(message)
             transaction_num = message.successful_payment.provider_payment_charge_id
             if transaction_num is not None:
-                print(self.handler_text.card_num)
                 utils.make_active(self.handler_text.card_num, self.handler_text.token_log)
                 pdf = CustomPDF(orientation='L', unit='mm', format='A4', token=self.handler_text.token_log)
                 # Создаем особое значение {nb}
@@ -33,5 +30,3 @@ class HandlerPayment(Handler):
                 pdf.simple_table(self.handler_text.card_num, spacing=2)
                 pdf.output('schedule_club.pdf')
                 utils.send_email(self.handler_text.email)
-
-            print(transaction_num)

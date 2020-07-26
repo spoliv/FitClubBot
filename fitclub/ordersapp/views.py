@@ -1,7 +1,6 @@
 import os
 from rest_framework import generics
 from django.core.mail import EmailMessage
-#from django.core import mail
 from django.http import HttpResponse
 from rest_framework.permissions import IsAuthenticated
 from mainfitclub.settings import config
@@ -10,11 +9,6 @@ from . import serializers
 from users.permissions import IsCardOwnerOrReadOnly
 
 
-# class ServiceCategoryListView(generics.ListAPIView):
-#     queryset = models.ServiceCategory.objects.all()
-#     serializer_class = serializers.ServiceCategorySerializer
-#
-#
 class OrderView(generics.ListAPIView):
     def get_queryset(self):
         queryset = super(OrderView, self).get_queryset()
@@ -76,7 +70,6 @@ class BasketCreateView(generics.ListCreateAPIView):
 class BasketOnlyIdView(generics.ListAPIView):
     def get_queryset(self):
         queryset = super(BasketOnlyIdView, self).get_queryset()
-        # queryset = queryset.filter(user=self.kwargs['pk'])
         queryset = queryset.filter(user=self.request.user.id)
         return queryset
     queryset = models.Basket.objects.all()
@@ -92,16 +85,6 @@ class BasketListView(generics.ListAPIView):
     queryset = models.Basket.objects.all()
     serializer_class = serializers.BasketListSerializer
     permission_classes = [IsCardOwnerOrReadOnly, IsAuthenticated, ]
-
-
-# class BasketLastListView(generics.ListAPIView):
-#     def get_queryset(self):
-#         queryset = super(BasketLastListView, self).get_queryset()
-#         queryset = queryset.filter(user=self.kwargs['pk']).first()
-#         print(queryset)
-#         return queryset
-#     queryset = models.Basket.objects.all()
-#     serializer_class = serializers.BasketListSerializer
 
 
 class ClientCardCreateView(generics.ListCreateAPIView):

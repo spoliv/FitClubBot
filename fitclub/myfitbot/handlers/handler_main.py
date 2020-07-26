@@ -20,7 +20,6 @@ class HandlerMain:
         """
         Запускает все обработчики бота
         """
-        #global TOKEN_LOG, EMAIL, CARD_NUM
         self.handler_text.handle()
         self.handler_inline_query.handle()
         self.handler_pay.handle()

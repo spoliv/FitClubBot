@@ -12,8 +12,6 @@ class TelBot:
     Основной класс телеграмм бота(Сервер), в основе которого
     используется библиотека pyTelegramBotAPI
     """
-    # __version__ = config.VERSION
-    # __author__ = config.AUTHOR
 
     def __init__(self):
         """
@@ -40,6 +38,7 @@ class TelBot:
         self.start()
         # служит для запуска бота (работа в режиме нон-стоп)
         self.bot.polling(none_stop=True)
+
 
 if __name__ == '__main__':
     bot = TelBot()

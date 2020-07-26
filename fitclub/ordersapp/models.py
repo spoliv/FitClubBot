@@ -27,17 +27,6 @@ class Order(models.Model):
     is_active = models.BooleanField(verbose_name='активен', default=True)
 
 
-# class ClientCard(models.Model):
-#     set_services = models.ManyToManyField(Order, blank=True)
-#     #set_services = models.ForeignKey('Order')
-#
-#
-#     @property
-#     def total_price(self):
-#         qs = self.set_services.through.objects.all().aggregate(total_price=models.Sum('service__price'))
-#         return qs['total_price']
-
-
 class ClientCard(models.Model):
     card_number = models.SlugField(max_length=4, unique=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='card')
