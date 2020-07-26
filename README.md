@@ -169,7 +169,7 @@ BotFather предложит ввести название нового бота
 3. Запустить файл bot.py.
 3. Открыть телеграмм(месенджер) и в поиске найти @FitClubBot или @sp_fit_bot и нажать старт. 
 
-<p align="center"><img src="img_md/Find.jpg" width="250" height="400"></p>
+<p align="center"><img src="img_md/scr_1.jpg" width="250" height="400"></p>
 
 
 
