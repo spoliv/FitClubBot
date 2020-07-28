@@ -19,6 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 #schedules_path = os.path.join(BASE_DIR, SCHEDULES_FOLDER)
+logo_img_path = os.path.join(BASE_DIR, 'images', 'club_logo.jpg')
 
 local_config_path = os.path.join(BASE_DIR, 'conf', 'local.conf')
 config = ConfigParser()

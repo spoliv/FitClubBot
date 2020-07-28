@@ -1,6 +1,7 @@
 import fpdf
 from fpdf import FPDF
 from myfitbot import utils
+from mainfitclub import settings
 
 
 class CustomPDF(FPDF):
@@ -11,7 +12,7 @@ class CustomPDF(FPDF):
 
     def header(self):
         # Устанавливаем лого
-        self.image('E:/Курсовой проект 2020/FitClubBot/fitclub/images/club_logo.jpg', 10, 6, 30)
+        self.image(settings.logo_img_path, 10, 6, 30)
         self.add_font('DejaVu', '', 'C:\Windows\Fonts\DejaVuSansCondensed.ttf', uni=True)
         self.set_font('DejaVu', '', 14)
 
@@ -80,15 +81,3 @@ class CustomPDF(FPDF):
         page = 'Page ' + str(self.page_no()) + '/{nb}'
         self.cell(0, 10, page, 0, 0, 'C')
 
-
-# def create_pdf(pdf_path, crd_n):
-#     pdf = CustomPDF(orientation='L', unit='mm', format='A4')
-#     # Создаем особое значение {nb}
-#     pdf.alias_nb_pages()
-#     pdf.add_page()
-#     pdf.simple_table(crd_n, spacing=2)
-#     pdf.output(pdf_path)
-
-
-#if __name__ == '__main__':
-#     create_pdf('schedule_club.pdf', 6591)
